@@ -1,4 +1,25 @@
 class UI {
+  //Display all the drinks categories
+  displayCategories() {
+    const categoryList = cocktail.getCategories().then((categories) => {
+      const catList = categories.categories.drinks;
+
+      //Append a first option without value
+      const firstOption = document.createElement("option");
+      firstOption.textContent = "-Select-";
+      firstOption.value = "";
+      document.querySelector("#search").appendChild(firstOption);
+
+      //Append into the Select
+      catList.forEach((category) => {
+        const option = document.createElement("option");
+        option.textContent = category.strCategory;
+        option.value = category.strCategory.split(" ").join("_");
+        document.querySelector("#search").appendChild(option);
+      });
+    });
+  }
+
   displayDrinksWithIngredients(drinks) {
     //Show the results first
     const resultsWrapper = document.querySelector(".results-wrapper");
@@ -46,11 +67,30 @@ class UI {
     });
   }
 
+  //Display single recipe
+  displaySingleRecipe(recipe) {
+    //Get variables
+    const modalTitle = document.querySelector(".modal-title"),
+      modalDescription = document.querySelector(
+        ".modal-body .description-text"
+      ),
+      modalIngredients = document.querySelector(
+        ".modal-body .ingredient-list .list-group"
+      );
+
+    //Set the values
+    modalTitle.innerHTML = recipe.strDrink;
+    modalDescription.innerHTML = recipe.strInstructions;
+
+    //Display the ingredients
+    modalIngredients.innerHTML = this.displayIngredients(recipe);
+  }
+
   displayIngredients(drink) {
     let ingredients = [];
     for (let i = 1; i < 16; i++) {
       const ingredientMeasure = {};
-      console.log(drink[`strIngredient${i}`]);
+
       if (
         drink[`strIngredient${i}`] !== null &&
         drink[`strIngredient${i}`] !== ""
@@ -64,8 +104,8 @@ class UI {
         ingredients.push(ingredientMeasure);
       }
     }
-    //Build the template
 
+    //Build the template
     let ingredientsTemplate = "";
     ingredients.forEach((ingredient) => {
       ingredientsTemplate += `
@@ -74,6 +114,33 @@ class UI {
     });
 
     return ingredientsTemplate;
+  }
+
+  //Display the cocktails without ingredients
+  displayDrinks(drinks) {
+    console.log(drinks);
+    const resultsWrapper = document.querySelector(".results-wrapper");
+    resultsWrapper.style.display = "block";
+
+    //Insert thhe results
+    const resultsDiv = document.querySelector("#results");
+    drinks.forEach((drink) => {
+      resultsDiv.innerHTML += `
+            <div class="col-md-6">
+                <div class="card my-3">
+                    <img class="card-img-top" src="${drink.strDrinkThumb}" alt="${drink.strDrink}">
+
+                    <div class="card-body">
+                        <h2 class="card-title text-center">${drink.strDrink}</h2>
+                        
+                        <a data-target="#recipe" class="btn btn-success get-recipe" href="#" data-toggle="modal" data-id="${drink.idDrink}">Get Recipe</a>
+                        
+                    </div>
+
+                </div>
+            </div>
+        `;
+    });
   }
 
   //Display a Custom Message
@@ -97,5 +164,10 @@ class UI {
     setTimeout(() => {
       document.querySelector(".alert").remove();
     }, 3000);
+  }
+
+  clearResults() {
+    const resultsDiv = document.querySelector("#results");
+    resultsDiv.innerHTML = "";
   }
 }
