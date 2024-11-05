@@ -3,7 +3,7 @@ class CocktailAPI {
   async getDrinksByName(name) {
     //Search by name
     const apiResponse = await fetch(
-      `http://www.thecocktaildb.com/api/json/v1/1/search.php?s=${name}`
+      `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${name}`
     );
     //Returns a json response
     const cocktails = await apiResponse.json();
@@ -32,15 +32,16 @@ class CocktailAPI {
     return { cocktails };
   }
 
-  async getDrinksByAlcohol(alcohol) {
+  async getDrinksByAlcohol(term) {
     const apiResponse = await fetch(
-      `http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${alcohol}`
+      `http://www.thecocktaildb.com/api/json/v1/1/filter.php?a=${term}`
     );
 
     const cocktails = await apiResponse.json();
 
     return { cocktails };
   }
+
   async getSingleRecipe(id) {
     const apiResponse = await fetch(
       `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`

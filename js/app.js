@@ -1,7 +1,8 @@
 //Instanciate the classes
 
 const ui = new UI(),
-  cocktail = new CocktailAPI();
+  cocktail = new CocktailAPI(),
+  cocktailDB = new CocktailDB();
 //Create the event listeners
 
 function eventListeners() {
@@ -85,6 +86,30 @@ function resultsDelegation(e) {
 
       ui.displaySingleRecipe(recipe.recipe.drinks[0]);
     });
+  }
+
+  if (e.target.classList.contains("favorite-btn")) {
+    if (e.target.classList.contains("is-favorite")) {
+      //Remove the class
+      e.target.classList.remove("is-favorite");
+      e.target.textContent = "+";
+    } else {
+      e.target.classList.add("is-favorite");
+      e.target.textContent = "-";
+
+      //Get info
+      const cardBody = e.target.parentElement;
+
+      const drinkInfo = {
+        id: e.target.dataset.id,
+        name: cardBody.querySelector(".card-title").textContent,
+        image: cardBody.querySelector(".card-img-top").src,
+      };
+      console.log(drinkInfo);
+
+      //Add to the storage
+      cocktailDB.saveIntoDB(drinkInfo);
+    }
   }
 }
 
