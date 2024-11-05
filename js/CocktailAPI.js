@@ -34,7 +34,7 @@ class CocktailAPI {
 
   async getDrinksByAlcohol(term) {
     const apiResponse = await fetch(
-      `http://www.thecocktaildb.com/api/json/v1/1/filter.php?a=${term}`
+      `https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=${term}`
     );
 
     const cocktails = await apiResponse.json();

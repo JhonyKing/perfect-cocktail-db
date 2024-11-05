@@ -70,6 +70,7 @@ class UI {
             </div>
         `;
     });
+    this.isFavorite();
   }
 
   //Display single recipe
@@ -149,6 +150,32 @@ class UI {
             </div>
         `;
     });
+    this.isFavorite();
+  }
+
+  //Display favorites from storage
+  displayFavorites(favorites) {
+    const favoritesTable = document.querySelector("#favorites tbody");
+    favorites.forEach((drink) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML += `
+        <td>
+          <img src="${drink.image}" alt="${drink.name}" width=100>
+        </td>
+        <td>
+          ${drink.name}
+        </td>
+        <td>
+          <a href="#" data-toggle="modal" data-target="#recipe" data-id="${drink.id}" class="btn btn-success get-recipe"> View </a>
+        </td>
+        <td>
+          <a href="#" data-id="${drink.id}" class="btn btn-danger remove-recipe"> Remove </a>
+        </td>
+      `;
+
+      favoritesTable.appendChild(tr);
+    });
   }
 
   //Display a Custom Message
@@ -177,5 +204,23 @@ class UI {
   clearResults() {
     const resultsDiv = document.querySelector("#results");
     resultsDiv.innerHTML = "";
+  }
+
+  removeFavorite(element) {
+    element.remove();
+  }
+
+  //Add a Class when cocktail is favorite
+  isFavorite() {
+    const drinks = cocktailDB.getFromDB();
+    drinks.forEach((drink) => {
+      let { id } = drink;
+      //Select the favorites
+      let favoriteDrink = document.querySelector(`[data-id="${id}"]`);
+      if (favoriteDrink) {
+        favoriteDrink.classList.add("is-favorite");
+        favoriteDrink.textContent = "-";
+      }
+    });
   }
 }
